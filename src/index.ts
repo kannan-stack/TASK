@@ -54,7 +54,6 @@ const server = async () => {
     return updatedRecord;
   });
 
-  console.log("Records to update: ", instructionToUpdate);
   await directionRepository.save(instructionToUpdate);
 };
 server();
