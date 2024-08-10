@@ -2,22 +2,37 @@ import { AppDataSource } from "./data-source";
 import ApprovedDirection from "./Entity/ApprovedDirection";
 import RxRequestLineItemEntity from "./Entity/RxRequestLineItemEntity";
 import crypto from "crypto";
+import RxRequestEntity from "./Entity/RxRequestEntity";
 
 const server = async () => {
   const connection = await AppDataSource.initialize();
+  const queryResponse = await connection
+    .getRepository(RxRequestEntity)
+    .createQueryBuilder("rx_request")
+    .select(
+      "rx_request_line_item.line_item->'patientMedication'->>'instructions' as instructions"
+    )
+    .innerJoin(
+      RxRequestLineItemEntity,
+      "rx_request_line_item",
+      "rx_request_line_item.rx_request_id=rx_request.rx_request_id"
+    )
+    .where("rx_request.meta_data->> 'requestType' =:requestType", {
+      requestType: "RX_ENTRY",
+    })
+    .getRawMany();
+
+  const instructions = queryResponse.map((response) => {
+    return response.instructions;
+  });
 
   const directionRepository = connection.getRepository(ApprovedDirection);
-  const direction = await directionRepository.find();
-  const lineItemRepository = connection.getRepository(RxRequestLineItemEntity);
-  const lineItems = await lineItemRepository.find();
+  const directionRecords = await directionRepository.find();
 
-  const instructionToUpdate = direction.map((directionRecord) => {
+  const instructionToUpdate = directionRecords.map((directionRecord) => {
     const hashedValue = directionRecord.hashedDirection;
 
-    const matchedInstruction = lineItems.find((lineItemRecord) => {
-      const instruction =
-        lineItemRecord?.lineItem?.patientMedication?.instructions;
-
+    const matchedInstruction = instructions.find((instruction) => {
       if (!!instruction) {
         const transformedDirection = instruction
           .replace(/\s+/g, "")
@@ -32,7 +47,7 @@ const server = async () => {
           return instruction;
         }
       }
-    })?.lineItem.patientMedication.instructions;
+    });
 
     const updatedRecord = { ...directionRecord, direction: matchedInstruction };
 
@@ -40,7 +55,6 @@ const server = async () => {
   });
 
   console.log("Records to update: ", instructionToUpdate);
-
   await directionRepository.save(instructionToUpdate);
 };
 server();

@@ -4,17 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-// import { RequestLineItemStatus, RequestLineItemType } from "../../enum/patient";
-// import { RxRefill, RxTransfer } from "../../graphql/__generated__/types";
-// import { TransferRequest } from "../../types/patientOnboardType";
-// eslint-disable-next-line import/no-cycle
-// import RxRequestEntity from "./rxRequest";
-
+import RxRequestEntity from "./RxRequestEntity";
 @Entity("rx_request_line_item", { schema: "smartscripts_pom" })
 class RxRequestLineItemEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
@@ -29,15 +23,12 @@ class RxRequestLineItemEntity {
   requestLineItemId!: string;
 
   @Column("varchar", { name: "rx_request_id" })
-  request!: string;
+  request!: RxRequestEntity;
 
   @Column("varchar", { name: "line_item_type", nullable: false, length: 36 })
   lineItemType!: string;
 
-  @Column("varchar", {
-    nullable: false,
-    name: "status",
-  })
+  @Column("varchar", { nullable: false, name: "status" })
   status!: string;
 
   @Column("boolean", {

@@ -1,6 +1,8 @@
 import { DataSource } from "typeorm";
+import RxRequestEntity from "./Entity/RxRequestEntity";
 import ApprovedDirection from "./Entity/ApprovedDirection";
 import RxRequestLineItemEntity from "./Entity/RxRequestLineItemEntity";
+
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -11,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: "postgres",
   synchronize: false,
   logging: true,
-  entities: [ApprovedDirection,RxRequestLineItemEntity],
-  subscribers:[],
-  migrations:[],
+  entities: [RxRequestEntity,ApprovedDirection,RxRequestLineItemEntity],
+  subscribers: [],
+  migrations: [],
 });
