@@ -75,7 +75,7 @@ const server = async () => {
     console.log("instructionToUpdate: ", instructionToUpdate.length);
     console.log("instructionToUpdate: ", instructionToUpdate);
 
-    // await directionRepository.save(compact(instructionToUpdate));
+    await directionRepository.save(compact(instructionToUpdate));
   } catch (error) {
     console.log("Error : ", JSON.stringify(error));
     throw error;
