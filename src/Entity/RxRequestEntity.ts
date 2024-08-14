@@ -52,7 +52,9 @@ class RxRequestEntity {
   @UpdateDateColumn({ name: "modified_timestamp", nullable: false })
   modifiedTimestamp?: Date;
 
-  @Column("varchar", { name: "line_item" })
+  @OneToMany(() => RxRequestLineItemEntity, (lineItem) => lineItem.request, {
+    eager: true,
+  })
   requestLineItems!: RxRequestLineItemEntity[];
 }
 
