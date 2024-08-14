@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -51,7 +52,7 @@ class RxRequestEntity {
   @UpdateDateColumn({ name: "modified_timestamp", nullable: false })
   modifiedTimestamp?: Date;
 
-  @Column("text", { array: true })
+  @Column("varchar", { name: "line_item" })
   requestLineItems!: RxRequestLineItemEntity[];
 }
 
