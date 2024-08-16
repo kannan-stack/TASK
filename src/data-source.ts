@@ -4,6 +4,9 @@ import ApprovedDirection from "./Entity/ApprovedDirection";
 import RxRequestLineItemEntity from "./Entity/RxRequestLineItemEntity";
 import dotenv from "dotenv";
 import ApprovedSigs from "./Entity/ApprovedSigs";
+import PrescriptionEntity from "./Entity/PrescriptionEntity";
+import PrescriptionOverrideEntity from "./Entity/PrescriptionOverrideEntity";
+import RxOrderEntity from "./Entity/RxOrderEntity";
 dotenv.config({ path: `.env.${process.env.NODE_ENV || "test"}` });
 
 export const AppDataSource = new DataSource({
@@ -15,7 +18,15 @@ export const AppDataSource = new DataSource({
   database: process.env.APP_DB_DATABASE,
   synchronize: false,
   logging: true,
-  entities: [RxRequestEntity,ApprovedDirection,RxRequestLineItemEntity, ApprovedSigs],
+  entities: [
+    RxRequestEntity,
+    ApprovedDirection,
+    RxRequestLineItemEntity,
+    ApprovedSigs,
+    PrescriptionEntity,
+    PrescriptionOverrideEntity,
+    RxOrderEntity,
+  ],
   subscribers: [],
   migrations: [],
 });
